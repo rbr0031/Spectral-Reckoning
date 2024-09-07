@@ -26,7 +26,7 @@ public class PlayerInteract : NetworkBehaviour
         _playerUI.UpdateText(string.Empty);
         //create a ray at the center of the camera, shooting outwards.
         Ray ray = new Ray(_camTransform.position, _camTransform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
+        //Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
         RaycastHit hitInfo; //variable to store our collision information.
 
         //shoot our raycast and store the information in hitInfo. Returns true if we hit something.
