@@ -39,6 +39,10 @@ public class PlayerInteract : NetworkBehaviour
                 if (inputManager.onFoot.Interact.triggered)
                 {
                     interactable.BaseInteract();
+                } else if (inputManager.onFoot.Drop.triggered)
+                {
+                    interactable.BaseDrop();
+
                 }
             }
         } 

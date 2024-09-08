@@ -14,7 +14,18 @@ public abstract class Interactable : NetworkBehaviour
         Interact();
     }
 
+    public void BaseDrop()
+    {
+        Drop();
+    }
+
     protected virtual void Interact()
+    {
+        //no code written in this function
+        //template to override in child classes
+    }
+
+    protected virtual void Drop()
     {
         //no code written in this function
         //template to override in child classes
