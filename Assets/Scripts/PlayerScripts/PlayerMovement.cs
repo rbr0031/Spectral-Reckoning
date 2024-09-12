@@ -16,11 +16,15 @@ public class PlayerMovement : NetworkBehaviour
     private float crouchTimer = 1;
     private bool lerpCrouch = false;
     private bool sprinting = false;
+    [SerializeField] private Animator animator;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();   
         Cursor.lockState = CursorLockMode.Locked;
+
+        // Get the Animator component
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -64,6 +68,11 @@ public class PlayerMovement : NetworkBehaviour
         if (isGrounded && playerVelocity.y < 0)
             playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
+
+        // Check if player is moving and update animator
+        bool isWalking = moveDirection.x != 0 || moveDirection.z != 0;
+        animator.SetBool("IsWalking", isWalking);
+
     }
 
     public void Jump() 
