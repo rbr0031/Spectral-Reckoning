@@ -11,6 +11,9 @@ public class PlayerWeapon : NetworkBehaviour
     [SerializeField] private GameObject bigDood; // Reference to the big Enemy GameObject
     [SerializeField] private GameObject jumpScare; // Reference to the jumpscare Enemy GameObject
     [SerializeField] private GameObject smallDood; // Reference to the small Enemy GameObject
+    [SerializeField] private GameObject getUp;
+    [SerializeField] private GameObject enemyAttackYou;
+    [SerializeField] private Animator animator;
 
     private void Start()
     {
@@ -31,6 +34,12 @@ public class PlayerWeapon : NetworkBehaviour
         {
             jumpScare = GameObject.Find("JumpScare");
         }
+        if(enemyAttackYou == null)
+        {
+            enemyAttackYou = GameObject.Find("EnemyAttackYou");
+        }
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -57,6 +66,24 @@ public class PlayerWeapon : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha5) && IsOwner)
         {
             RequestSetActiveServerRpc(false, "jumpScare");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6) && IsOwner)
+        {
+            RequestSetActiveServerRpc(true, "GetUp");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7) && IsOwner)
+        {
+            RequestSetActiveServerRpc(false, "enemyAttackYou");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8) && IsOwner)
+        {
+            RequestSetActiveServerRpc(true, "enemyAttackYou");
+        }
+        if (Input.GetMouseButton(1)) 
+        {
+            animator.SetBool("IsAiming", true);
+        } else {
+            animator.SetBool("IsAiming", false);
         }
     }
 
@@ -115,6 +142,14 @@ public class PlayerWeapon : NetworkBehaviour
                 jumpScare.SetActive(isActive);
                 UpdateClientRpc(isActive, "jumpScare");
                 break;
+            case "GetUp":
+                getUp.SetActive(isActive);
+                UpdateClientRpc(isActive, "GetUp");
+                break;
+            case "enemyAttackYou":
+                enemyAttackYou.SetActive(isActive);
+                UpdateClientRpc(isActive, "enemyAttackYou");
+                break;
         }
     }
 
@@ -132,6 +167,12 @@ public class PlayerWeapon : NetworkBehaviour
                 break;
             case "jumpScare":
                 jumpScare.SetActive(isActive);
+                break;
+            case "GetUp":
+                getUp.SetActive(isActive);
+                break;
+            case "enemyAttackYou":
+                enemyAttackYou.SetActive(isActive);
                 break;
         }
     }
