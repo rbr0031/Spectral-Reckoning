@@ -10,7 +10,9 @@ public class PlayerInteract : NetworkBehaviour
     [SerializeField] private LayerMask _interactableLayer;
     private PlayerUI _playerUI;
     private InputManager inputManager;
-    
+
+    private Interactable currentInteractable; // Track the currently held interactable
+
     void Start()
     {
         _camTransform = GetComponent<PlayerLook>()._camTransform;
@@ -20,31 +22,37 @@ public class PlayerInteract : NetworkBehaviour
 
     void Update()
     {
-        if(!IsOwner)
+        if (!IsOwner)
             return;
 
         _playerUI.UpdateText(string.Empty);
+        
         //create a ray at the center of the camera, shooting outwards.
         Ray ray = new Ray(_camTransform.position, _camTransform.forward);
-        //Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
         RaycastHit hitInfo; //variable to store our collision information.
 
         //shoot our raycast and store the information in hitInfo. Returns true if we hit something.
-        if (Physics.Raycast(ray, out hitInfo, distance, _interactableLayer)) 
+        if (Physics.Raycast(ray, out hitInfo, distance, _interactableLayer))
         {
-            if(hitInfo.collider.GetComponent<Interactable>() != null)
+            if (hitInfo.collider.GetComponent<Interactable>() != null)
             {
                 Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
                 _playerUI.UpdateText(interactable.promtMessage);
+                
+                // Check for interact input
                 if (inputManager.onFoot.Interact.triggered)
                 {
                     interactable.BaseInteract();
-                } else if (inputManager.onFoot.Drop.triggered)
-                {
-                    interactable.BaseDrop();
-
+                    currentInteractable = interactable; // Save the interactable as currently held
                 }
             }
-        } 
+        }
+
+        // Handle the drop action independently of raycast hits
+        if (inputManager.onFoot.Drop.triggered && currentInteractable != null)
+        {
+            currentInteractable.BaseDrop();
+            currentInteractable = null; // Clear the reference after dropping the item
+        }
     }
 }
